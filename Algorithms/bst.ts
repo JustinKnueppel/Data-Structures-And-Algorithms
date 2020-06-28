@@ -16,6 +16,15 @@ const insert = (root: Node, node: Node): void => {
   }
 };
 
+const contains = (root: Node, target: Node) => {
+  let curNode: Node|undefined = root;
+  while (curNode) {
+    if (curNode.val === target.val) return true
+    curNode = target.val < curNode.val ? curNode.left : curNode.right;
+  }
+  return false
+}
+
 const remove = (root: Node, node: Node): Node => {
   // Find node
   let curNode = root;
@@ -68,4 +77,4 @@ const findSmallestNode = (root: Node): Node => {
   return curNode;
 }
 
-export { insert, remove };
+export { insert, remove, contains };
