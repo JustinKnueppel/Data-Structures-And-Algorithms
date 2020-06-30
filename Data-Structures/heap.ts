@@ -1,8 +1,12 @@
-abstract class Heap {
-  protected values: Array<number>;
-  protected heapSize: number;
+type Comparator = (n1: number, n2: number) => number;
 
-  constructor(values?: Array<number>) {
+class Heap {
+  private values: Array<number>;
+  private heapSize: number;
+  private compareFn: Comparator;
+
+  constructor(compareFn: Comparator, values?: Array<number>) {
+    this.compareFn = compareFn;
     this.values = values || new Array<number>();
     this.heapSize = this.values.length;
     this.heapify();
@@ -26,7 +30,9 @@ abstract class Heap {
     return this.heapSize;
   }
 
-  protected abstract leftShouldBeParent(left: number, right: number): boolean;
+  private leftShouldBeParent(left: number, right: number): boolean {
+    return this.compareFn(left, right) <= 0;
+  }
 
   private heapify(): void {
     const end = this.heapSize - 1;
@@ -88,15 +94,17 @@ abstract class Heap {
 }
 
 class MaxHeap extends Heap {
-  protected leftShouldBeParent(left: number, right: number): boolean {
-    return left > right;
+  constructor(values?: Array<number>) {
+    const greaterThan = (n1: number, n2: number) => n2 - n1;
+    super(greaterThan, values);
   }
 }
 
 class MinHeap extends Heap {
-  protected leftShouldBeParent(left: number, right: number): boolean {
-    return left < right;
+  constructor(values?: Array<number>) {
+    const lessThan = (n1: number, n2: number) => n1 - n2;
+    super(lessThan, values);
   }
 }
 
-export { Heap, MaxHeap, MinHeap };
+export { Heap, MaxHeap, MinHeap, Comparator };
